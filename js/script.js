@@ -68,7 +68,6 @@ function clickButton(){
                         squares[i].style.pointerEvents = 'none';
                     }
                     
-
                     // messaggio per l'utente
                     userMessage.innerHTML = `Hai perso, il tuo punteggio è ${goodAttempt.length}`;
                 } else{
