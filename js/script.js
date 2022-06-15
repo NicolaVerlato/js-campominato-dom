@@ -38,28 +38,43 @@ function clickButton(){
     const maxAttempts = maxNumber - bombsArray.length;
 
     crateGrid();
-
+    
     function crateGrid(){
         const grid = document.getElementById('grid');
         grid.classList.add(gridClass);
+
         for(let i = 1; i <= maxNumber; i++){
             // creo il qudrato dal sample html <div class="square"><span>1</span></div>
-            const square = document.createElement('div')
+            const square = document.createElement('div');
             square.classList.add('square');
             // aggiungo il numero al quadrato
             square.innerHTML = `<span>${i}</span>`;
             
+            square.addEventListener('click', handleClick);
+
+            function handleClick(){
+                console.log(this)
+                let thisNumber = parseInt(this.querySelector('span').innerHTML);
+                console.log(thisNumber)
+                //  se l'utente preme uno square con una bomba 
+                if(bombsArray.includes(thisNumber)){
+                    this.classList.add('red');
+                    let squares = document.querySelectorAll('.square');
+                    
+                    for(let i = 0; i < squares.length; i++){
+                        console.log(squares[i])
+                        // squares[i].removeEventListener('click', handleClick)
+                        squares[i].style.pointerEvents = 'none';
+                    }
+                } else{
+                    this.classList.add('blue');
+                }
+            }
+
             // appendo il quadrato alla griglia
-            grid.append(square);
+            grid.append(square); 
         }
-    
-        // square.addEventListener('click', squareclick())
-    
-        // function squareclick(){
-        //     alert('ciao')
-        // }
     }
-    
 }
 
 
