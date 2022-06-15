@@ -57,3 +57,8 @@ main{
 .square.blue{
     background-color: #6495ec;
 }
+
+#user-message{
+    text-align: center;
+    font-size: 30px;
+}

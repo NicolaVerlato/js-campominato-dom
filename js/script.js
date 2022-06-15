@@ -38,7 +38,8 @@ function clickButton(){
     const maxAttempts = maxNumber - bombsArray.length;
 
     crateGrid();
-    
+
+    const userMessage = document.getElementById('user-message');
     function crateGrid(){
         const grid = document.getElementById('grid');
         grid.classList.add(gridClass);
@@ -53,24 +54,32 @@ function clickButton(){
             square.addEventListener('click', handleClick);
 
             function handleClick(){
-                console.log(this)
                 let thisNumber = parseInt(this.querySelector('span').innerHTML);
-                console.log(thisNumber)
+
+                // ogni numero cliccato viene pushato nell'array dei numeri giusti
+                goodAttempt.push(thisNumber)
                 //  se l'utente preme uno square con una bomba 
                 if(bombsArray.includes(thisNumber)){
                     this.classList.add('red');
                     let squares = document.querySelectorAll('.square');
                     
                     for(let i = 0; i < squares.length; i++){
-                        console.log(squares[i])
                         // squares[i].removeEventListener('click', handleClick)
                         squares[i].style.pointerEvents = 'none';
                     }
+                    
+
+                    // messaggio per l'utente
+                    userMessage.innerHTML = `Hai perso, il tuo punteggio è ${goodAttempt.length}`;
                 } else{
                     this.classList.add('blue');
                 }
-            }
 
+                if(goodAttempt.length === maxNumber){
+                    // messaggio per l'utente
+                    userMessage.innerHTML = `Hai vinto, il tuo punteggio è ${goodAttempt.length}`;
+                }
+            }
             // appendo il quadrato alla griglia
             grid.append(square); 
         }
