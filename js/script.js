@@ -3,27 +3,24 @@ const btn = document.getElementById('play-btn');
 // massimo di numeri in base al livello di difficoltà
 let maxNumber;
 
-btn.addEventListener('click', clickButton
-    
-)
+btn.addEventListener('click', clickButton);
 
 function clickButton(){
     // Chiedere all'utente il livello di difficoltà
     const difficultyLevel = document.getElementById('user-level').value;
-
+    
     let gridClass;
     if(difficultyLevel === '1') {
         maxNumber = 100;
-        gridClass = 'easy'
+        gridClass = 'easy';
     } else if( difficultyLevel === '2') {
         maxNumber = 81;
-        gridClass = 'hard'
+        gridClass = 'hard';
     } else if(difficultyLevel === '3') {
         maxNumber = 49;
-        gridClass = 'crazy'
+        gridClass = 'crazy';
     }
-    console.log(difficultyLevel)
-    console.log(maxNumber)
+
     // numero massimo bombe
     const maxbombs = 16;
 
@@ -32,17 +29,18 @@ function clickButton(){
 
     // array bombe con funzione (l'array è dento la funzione)
     const bombsArray = randomBombs(1, maxbombs);
-    console.log(bombsArray)
 
     // numero massimo di tentativi
     const maxAttempts = maxNumber - bombsArray.length;
 
     crateGrid();
 
-    const userMessage = document.getElementById('user-message');
     function crateGrid(){
+        const userMessage = document.getElementById('user-message');
+        userMessage.innerHTML = '';
         const grid = document.getElementById('grid');
         grid.classList.add(gridClass);
+        grid.innerHTML = '';
 
         for(let i = 1; i <= maxNumber; i++){
             // creo il qudrato dal sample html <div class="square"><span>1</span></div>
@@ -53,34 +51,43 @@ function clickButton(){
             
             square.addEventListener('click', handleClick);
 
-            function handleClick(){
-                let thisNumber = parseInt(this.querySelector('span').innerHTML);
-
-                // ogni numero cliccato viene pushato nell'array dei numeri giusti
-                goodAttempt.push(thisNumber)
-                //  se l'utente preme uno square con una bomba 
-                if(bombsArray.includes(thisNumber)){
-                    this.classList.add('red');
-                    let squares = document.querySelectorAll('.square');
-                    
-                    for(let i = 0; i < squares.length; i++){
-                        // squares[i].removeEventListener('click', handleClick)
-                        squares[i].style.pointerEvents = 'none';
-                    }
-                    
-                    // messaggio per l'utente
-                    userMessage.innerHTML = `Hai perso, il tuo punteggio è ${goodAttempt.length}`;
-                } else{
-                    this.classList.add('blue');
-                }
-
-                if(goodAttempt.length === maxNumber){
-                    // messaggio per l'utente
-                    userMessage.innerHTML = `Hai vinto, il tuo punteggio è ${goodAttempt.length}`;
-                }
-            }
             // appendo il quadrato alla griglia
             grid.append(square); 
+        }
+
+        function handleClick(){
+            let thisNumber = parseInt(this.querySelector('span').innerHTML);
+
+            // ogni numero cliccato viene pushato nell'array dei numeri giusti
+            goodAttempt.push(thisNumber);
+            this.style.pointerEvents = 'none';
+            //  se l'utente preme uno square con una bomba 
+            if(bombsArray.includes(thisNumber)){
+                this.classList.add('red');
+                let squares = document.querySelectorAll('.square');
+                
+                // dopo aver trovato una bomba non l'utente non può puoi cliccare da nessuna parte
+                for(let i = 0; i < squares.length; i++){
+                    const thisSquare =  squares[i];
+                    thisSquare.style.pointerEvents = 'none';
+
+                    // e tutte le bombe vengono scoperte
+                    thisSquareNumber = parseInt(thisSquare.querySelector('span').innerHTML);
+                    if(bombsArray.includes(thisSquareNumber)){
+                        thisSquare.classList.add('red');
+                    }
+                }
+                
+            // messaggio per l'utente
+            userMessage.innerHTML = `Hai perso, il tuo punteggio è ${goodAttempt.length - 1}`;
+            } else{
+                this.classList.add('blue');
+            }
+
+            if(goodAttempt.length === maxNumber){
+                // messaggio per l'utente
+                userMessage.innerHTML = `Hai vinto, il tuo punteggio è ${goodAttempt.length}`;
+            }
         }
     }
 }
@@ -111,14 +118,3 @@ function randomBombs(min, max) {
     return array;
 }
 
-// funzione per endGame
-// function endOfGame(result, score) {
-
-//     if(result === 'win') {
-//         alert('Hai Vinto!');
-//         alert(score);
-//     } else {
-//         alert('Hai perso');
-//         alert('Il tuo punteggio è: ' + score);
-//     }
-// }
